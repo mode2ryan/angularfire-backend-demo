@@ -1,0 +1,6 @@
+account:
+  id: 020202020222
+
+db:
+  table:
+    name: ${self:custom.base}-my-table
