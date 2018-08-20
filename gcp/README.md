@@ -153,3 +153,9 @@ serverless deploy -v
 ```
 
 Above, we made a deploy to the Google Cloud in `verbose` mode giving us extra print outs. With any luck we should see a `Service Information` log informing us of the successful deployment.
+
+## Firebase Functions with code
+
+This is a repository for various examples of Firebase functions which do different things from sending emails, generating thumbnails, paypal, or instagram.
+
+[Source](https://github.com/firebase/functions-samples)

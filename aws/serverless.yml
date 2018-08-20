@@ -18,6 +18,8 @@ functions:
   api:
     name: ${self:service}-${self:provider.stage}-api
     handler: src/handlers/index.handler
+    environment:
+      TABLE_NAME: ${self:custom.db.table.name}
     events:
       - http:
           path: /api/sns
