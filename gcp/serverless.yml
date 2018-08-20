@@ -1,0 +1,57 @@
+service: angularfire-gcp-backend-demo # NOTE: Don't put the word "google" in here
+
+provider:
+  name: google
+  runtime: nodejs
+  stage: ${opt:stage, "dev"}
+  project: ${self:custom.config.projectId}
+  # the path to the credentials file needs to be absolute
+  credentials: ~/.gcloud/keyfile.json
+  # labels:
+  #   application: angularfire-backend-demo
+
+plugins:
+  - serverless-google-cloudfunctions
+
+# needs more granular excluding in production as only the serverless provider npm
+# package should be excluded (and not the whole node_modules directory)
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+
+custom:
+  config: ${file(./config/config.${self:provider.stage}.yml)}
+
+functions:
+  firestore:
+    name: ${self:service}-${self:provider.stage}-firestore
+    handler: event
+    events:
+      - event:
+          eventType: "providers/cloud.firestore/eventTypes/document.create"
+          resource: "projects/${self:custom.config.projectId}/databases/(default)/documents/articles/{article}"
+    # labels:
+    #   team: GCF Team
+    #   costcenter: 102030
+
+  # NOTE: the following uses an "event" event (pubSub event in this case).
+  # Please create the corresponding resources in the Google Cloud
+  # before deploying this service through Serverless
+
+  #second:
+  #  handler: event
+  #  events:
+  #    - event:
+  #        eventType: providers/cloud.pubsub/eventTypes/topic.publish
+  #        resource: projects/*/topics/my-topic
+
+# you can define resources, templates etc. the same way you would in a
+# Google Cloud deployment configuration
+#resources:
+#  resources:
+#    - type: storage.v1.bucket
+#      name: my-serverless-service-bucket
+#  imports:
+#    - path: my_template.jinja
